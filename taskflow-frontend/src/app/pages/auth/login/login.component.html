@@ -1,59 +1,143 @@
-<div class="auth-layout">
+<div class="auth-wrapper">
+
+  <!-- Animated background shapes -->
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+  </div>
+
+  <!-- Left panel -->
   <div class="auth-left">
-    <div class="auth-brand">
-      <div class="brand-icon">
-        <i class="bi bi-lightning-charge-fill"></i>
+    <div class="left-content">
+      <div class="brand-logo">
+        <div class="logo-icon">
+          <i class="bi bi-lightning-charge-fill"></i>
+        </div>
+        <span class="logo-text">TaskFlow</span>
       </div>
-      <h1>TaskFlow</h1>
-      <p>Gérez vos projets et vos équipes avec efficacité.</p>
-    </div>
-    <div class="auth-illustration">
-      <i class="bi bi-people-fill"></i>
+
+      <div class="left-hero">
+        <h1 class="hero-title">
+          Gérez vos projets<br>
+          <span class="gradient-text">avec intelligence</span>
+        </h1>
+        <p class="hero-desc">
+          Plateforme collaborative tout-en-un pour vos équipes.<br>
+          Organisez, collaborez et livrez plus efficacement.
+        </p>
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+          <span>Sécurisé avec JWT & Spring Security</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="bi bi-people"></i></div>
+          <span>Gestion des rôles et des équipes</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
+          <span>Tableau de bord en temps réel</span>
+        </div>
+      </div>
+
+      <div class="left-badges">
+        <div class="tech-badge">Spring Boot 3</div>
+        <div class="tech-badge">Angular 16</div>
+        <div class="tech-badge">MySQL</div>
+        <div class="tech-badge">JWT</div>
+      </div>
     </div>
   </div>
 
+  <!-- Right panel -->
   <div class="auth-right">
     <div class="auth-card">
-      <div class="auth-header">
-        <h2>Connexion</h2>
-        <p>Accédez à votre espace de travail</p>
+
+      <div class="card-header">
+        <div class="welcome-icon">
+          <i class="bi bi-person-circle"></i>
+        </div>
+        <h2>Bon retour !</h2>
+        <p>Connectez-vous à votre espace de travail</p>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Adresse email</mat-label>
-          <mat-icon matPrefix>email</mat-icon>
-          <input matInput formControlName="email" type="email"
-                 placeholder="nom@exemple.com" autocomplete="email">
-          <mat-error *ngIf="email.hasError('required')">Email obligatoire</mat-error>
-          <mat-error *ngIf="email.hasError('email')">Format invalide</mat-error>
-        </mat-form-field>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" autocomplete="off">
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Mot de passe</mat-label>
-          <mat-icon matPrefix>lock_outline</mat-icon>
-          <input matInput formControlName="password"
-                 [type]="hidePassword ? 'password' : 'text'"
-                 autocomplete="current-password">
-          <button mat-icon-button matSuffix type="button"
-                  (click)="hidePassword = !hidePassword">
-            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-          <mat-error *ngIf="password.hasError('required')">Mot de passe obligatoire</mat-error>
-          <mat-error *ngIf="password.hasError('minlength')">Minimum 8 caractères</mat-error>
-        </mat-form-field>
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label">Adresse email</label>
+          <div class="field-wrapper" [class.error]="email.invalid && email.touched"
+               [class.success]="email.valid && email.touched">
+            <span class="field-icon"><i class="bi bi-envelope"></i></span>
+            <input class="field-input"
+                   type="email"
+                   formControlName="email"
+                   placeholder="nom@exemple.com"
+                   autocomplete="email">
+            <span class="field-status" *ngIf="email.touched">
+              <i class="bi" [class.bi-check-circle-fill]="email.valid"
+                            [class.bi-x-circle-fill]="email.invalid"></i>
+            </span>
+          </div>
+          <div class="field-error" *ngIf="email.invalid && email.touched">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ email.hasError('required') ? 'Email obligatoire' : 'Format email invalide' }}
+          </div>
+        </div>
 
-        <button mat-flat-button color="primary" type="submit"
-                class="submit-btn w-100" [disabled]="loading">
-          <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
-          <span *ngIf="!loading">Se connecter</span>
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label">
+            Mot de passe
+          </label>
+          <div class="field-wrapper" [class.error]="password.invalid && password.touched"
+               [class.success]="password.valid && password.touched">
+            <span class="field-icon"><i class="bi bi-lock"></i></span>
+            <input class="field-input"
+                   [type]="hidePassword ? 'password' : 'text'"
+                   formControlName="password"
+                   placeholder="••••••••"
+                   autocomplete="current-password">
+            <button type="button" class="toggle-pw" (click)="hidePassword = !hidePassword">
+              <i class="bi" [class.bi-eye]="hidePassword" [class.bi-eye-slash]="!hidePassword"></i>
+            </button>
+          </div>
+          <div class="field-error" *ngIf="password.invalid && password.touched">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ password.hasError('required') ? 'Mot de passe obligatoire' : 'Minimum 8 caractères' }}
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" [class.loading]="loading" [disabled]="loading">
+          <span class="btn-content" *ngIf="!loading">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Se connecter
+          </span>
+          <span class="btn-content" *ngIf="loading">
+            <div class="spinner"></div>
+            Connexion en cours...
+          </span>
         </button>
+
       </form>
 
-      <div class="auth-footer">
-        <span>Pas encore de compte ?</span>
-        <a routerLink="/auth/register">Créer un compte</a>
+      <div class="divider"><span>ou</span></div>
+
+      <div class="card-footer">
+        <p>Pas encore de compte ?</p>
+        <a routerLink="/auth/register" class="link-register">
+          Créer un compte gratuitement
+          <i class="bi bi-arrow-right"></i>
+        </a>
       </div>
+
     </div>
   </div>
+
 </div>
