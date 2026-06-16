@@ -1,0 +1,52 @@
+<nav class="navbar-tf">
+  <div class="navbar-left">
+    <button mat-icon-button class="toggle-btn" (click)="toggleSidebar.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="brand">
+      <span class="brand-icon">
+        <i class="bi bi-lightning-charge-fill"></i>
+      </span>
+      <span class="brand-name">TaskFlow</span>
+    </div>
+  </div>
+
+  <div class="navbar-right">
+    <ng-container *ngIf="currentUser$ | async as user">
+      <button mat-icon-button class="notif-btn" matTooltip="Notifications">
+        <mat-icon>notifications_none</mat-icon>
+      </button>
+
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
+        <ng-container *ngIf="getAvatarUrl(user) as avatarUrl; else initials">
+          <img [src]="avatarUrl" alt="avatar" class="avatar-circle me-2">
+        </ng-container>
+        <ng-template #initials>
+          <div class="avatar-initials me-2">{{ getInitials(user) }}</div>
+        </ng-template>
+        <div class="user-info">
+          <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+          <span class="user-role">{{ getRoleBadge(user.role) }}</span>
+        </div>
+        <mat-icon class="chevron">expand_more</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu" xPosition="before" class="user-menu">
+        <div class="menu-header">
+          <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+          <small>{{ user.email }}</small>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="goToProfile()">
+          <mat-icon>person_outline</mat-icon>
+          <span>Mon profil</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()" class="logout-btn">
+          <mat-icon>logout</mat-icon>
+          <span>Déconnexion</span>
+        </button>
+      </mat-menu>
+    </ng-container>
+  </div>
+</nav>

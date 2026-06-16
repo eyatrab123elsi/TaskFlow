@@ -1,0 +1,131 @@
+<div class="dashboard-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h2>Tableau de bord</h2>
+      <p>Bienvenue, <strong>{{ currentUser?.firstName }}</strong> ! Voici un aperçu de la plateforme.</p>
+    </div>
+    <button mat-flat-button color="primary" routerLink="/users"
+            *ngIf="authService.isAdmin()">
+      <mat-icon>people</mat-icon>
+      Gérer les utilisateurs
+    </button>
+  </div>
+
+  <!-- Stats (Admin only) -->
+  <ng-container *ngIf="authService.isAdmin()">
+    <div class="stats-grid" *ngIf="!loading; else loadingTpl">
+      <div class="stat-card" *ngFor="let card of statCards">
+        <div class="stat-icon" [style.background]="card.bg" [style.color]="card.color">
+          <mat-icon>{{ card.icon }}</mat-icon>
+        </div>
+        <div>
+          <div class="stat-value" [style.color]="card.color">{{ getStatValue(card.key) }}</div>
+          <div class="stat-label">{{ card.label }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Distribution card -->
+    <div class="row g-3 mt-2" *ngIf="stats">
+      <div class="col-md-4">
+        <div class="dist-card">
+          <div class="dist-title">Répartition par rôle</div>
+          <div class="dist-bar-group">
+            <div class="dist-item">
+              <span class="dist-label"><span class="dot admin"></span> Administrateurs</span>
+              <span class="dist-count">{{ stats.adminCount }}</span>
+            </div>
+            <div class="dist-progress">
+              <div class="dist-fill admin"
+                   [style.width.%]="stats.totalUsers ? (stats.adminCount / stats.totalUsers * 100) : 0">
+              </div>
+            </div>
+            <div class="dist-item mt-2">
+              <span class="dist-label"><span class="dot pm"></span> Chefs de projet</span>
+              <span class="dist-count">{{ stats.projectManagerCount }}</span>
+            </div>
+            <div class="dist-progress">
+              <div class="dist-fill pm"
+                   [style.width.%]="stats.totalUsers ? (stats.projectManagerCount / stats.totalUsers * 100) : 0">
+              </div>
+            </div>
+            <div class="dist-item mt-2">
+              <span class="dist-label"><span class="dot member"></span> Membres</span>
+              <span class="dist-count">{{ stats.memberCount }}</span>
+            </div>
+            <div class="dist-progress">
+              <div class="dist-fill member"
+                   [style.width.%]="stats.totalUsers ? (stats.memberCount / stats.totalUsers * 100) : 0">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="dist-card">
+          <div class="dist-title">Statut des comptes</div>
+          <div class="status-summary">
+            <div class="status-circle">
+              <div class="circle-inner">
+                <span class="circle-value">{{ stats.totalUsers > 0 ? ((stats.activeUsers / stats.totalUsers) * 100 | number:'1.0-0') : 0 }}%</span>
+                <span class="circle-label">actifs</span>
+              </div>
+            </div>
+            <div class="status-legend">
+              <div class="legend-item">
+                <span class="dot active-dot"></span>
+                <span>Actifs : <strong>{{ stats.activeUsers }}</strong></span>
+              </div>
+              <div class="legend-item">
+                <span class="dot inactive-dot"></span>
+                <span>Désactivés : <strong>{{ stats.inactiveUsers }}</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="dist-card quick-actions">
+          <div class="dist-title">Actions rapides</div>
+          <div class="actions-list">
+            <a routerLink="/users/new" mat-stroked-button class="action-btn">
+              <mat-icon>person_add</mat-icon>
+              Nouvel utilisateur
+            </a>
+            <a routerLink="/users" mat-stroked-button class="action-btn">
+              <mat-icon>manage_accounts</mat-icon>
+              Gérer les utilisateurs
+            </a>
+            <a routerLink="/profile" mat-stroked-button class="action-btn">
+              <mat-icon>person_outline</mat-icon>
+              Mon profil
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Non-admin welcome -->
+  <ng-container *ngIf="!authService.isAdmin()">
+    <div class="welcome-card card-tf">
+      <mat-icon class="welcome-icon">waving_hand</mat-icon>
+      <h3>Bienvenue sur TaskFlow !</h3>
+      <p>Utilisez la barre de navigation pour accéder à votre profil et à vos fonctionnalités.</p>
+      <a routerLink="/profile" mat-flat-button color="primary" class="mt-3">
+        <mat-icon>person</mat-icon>
+        Accéder à mon profil
+      </a>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="stats-loading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Chargement des statistiques...</p>
+  </div>
+</ng-template>

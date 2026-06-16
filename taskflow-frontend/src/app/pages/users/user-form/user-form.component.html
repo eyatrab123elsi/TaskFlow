@@ -1,0 +1,134 @@
+<div class="form-page">
+
+  <div class="page-header">
+    <div>
+      <h2>{{ isEdit ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur' }}</h2>
+      <p>{{ isEdit ? 'Mettez à jour les informations de l\'utilisateur' : 'Créez un nouveau compte utilisateur' }}</p>
+    </div>
+    <button mat-stroked-button (click)="cancel()">
+      <mat-icon>arrow_back</mat-icon>
+      Retour à la liste
+    </button>
+  </div>
+
+  <div class="form-layout">
+    <!-- Avatar panel -->
+    <div class="avatar-panel card-tf">
+      <div class="avatar-preview-container" (click)="fileInput.click()">
+        <ng-container *ngIf="previewUrl; else initialsPreview">
+          <img [src]="previewUrl" alt="avatar" class="avatar-preview">
+        </ng-container>
+        <ng-template #initialsPreview>
+          <div class="avatar-initials-lg">{{ getInitials() }}</div>
+        </ng-template>
+        <div class="avatar-overlay">
+          <mat-icon>photo_camera</mat-icon>
+          <span>Changer</span>
+        </div>
+      </div>
+      <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelect($event)">
+      <p class="avatar-hint">Cliquez pour uploader une photo<br><small>JPG, PNG, WebP — max 10 MB</small></p>
+    </div>
+
+    <!-- Form panel -->
+    <div class="form-panel card-tf" *ngIf="!loading; else loadingTpl">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <h3 class="section-title">Informations personnelles</h3>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Prénom *</mat-label>
+              <input matInput formControlName="firstName">
+              <mat-error *ngIf="firstName.hasError('required')">Obligatoire</mat-error>
+              <mat-error *ngIf="firstName.hasError('minlength')">Minimum 2 caractères</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Nom *</mat-label>
+              <input matInput formControlName="lastName">
+              <mat-error *ngIf="lastName.hasError('required')">Obligatoire</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Email *</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput formControlName="email" type="email">
+          <mat-error *ngIf="email.hasError('required')">Obligatoire</mat-error>
+          <mat-error *ngIf="email.hasError('email')">Format invalide</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Téléphone</mat-label>
+          <mat-icon matPrefix>phone</mat-icon>
+          <input matInput formControlName="phone" type="tel">
+        </mat-form-field>
+
+        <mat-divider class="my-3"></mat-divider>
+        <h3 class="section-title">Accès et rôle</h3>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Rôle *</mat-label>
+              <mat-icon matPrefix>badge</mat-icon>
+              <mat-select formControlName="role">
+                <mat-option value="ADMIN">Administrateur</mat-option>
+                <mat-option value="PROJECT_MANAGER">Chef de projet</mat-option>
+                <mat-option value="MEMBER">Membre</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6 d-flex align-items-center">
+            <mat-slide-toggle formControlName="enabled" color="primary">
+              <span class="toggle-label">
+                {{ form.get('enabled')?.value ? 'Compte actif' : 'Compte désactivé' }}
+              </span>
+            </mat-slide-toggle>
+          </div>
+        </div>
+
+        <mat-divider class="my-3"></mat-divider>
+        <h3 class="section-title">
+          {{ isEdit ? 'Modifier le mot de passe (optionnel)' : 'Mot de passe *' }}
+        </h3>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ isEdit ? 'Nouveau mot de passe' : 'Mot de passe' }}</mat-label>
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <input matInput formControlName="password"
+                 [type]="hidePassword ? 'password' : 'text'">
+          <button mat-icon-button matSuffix type="button"
+                  (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-hint *ngIf="isEdit">Laissez vide pour conserver le mot de passe actuel</mat-hint>
+          <mat-error *ngIf="password.hasError('required')">Obligatoire</mat-error>
+          <mat-error *ngIf="password.hasError('minlength')">Minimum 8 caractères</mat-error>
+        </mat-form-field>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="cancel()" [disabled]="saving">
+            Annuler
+          </button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="saving">
+            <mat-spinner diameter="18" *ngIf="saving"></mat-spinner>
+            <mat-icon *ngIf="!saving">save</mat-icon>
+            {{ saving ? 'Sauvegarde...' : (isEdit ? 'Enregistrer' : 'Créer l\'utilisateur') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="form-panel card-tf loading-panel">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Chargement...</p>
+  </div>
+</ng-template>

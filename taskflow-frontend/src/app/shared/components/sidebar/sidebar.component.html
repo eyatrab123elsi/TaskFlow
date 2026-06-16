@@ -1,0 +1,23 @@
+<aside class="sidebar" [class.collapsed]="collapsed">
+  <nav class="sidebar-nav">
+    <ul>
+      <li *ngFor="let item of navItems">
+        <ng-container *ngIf="isVisible(item)">
+          <a [routerLink]="item.route"
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+             class="nav-item"
+             [matTooltip]="collapsed ? item.label : ''"
+             matTooltipPosition="right">
+            <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+          </a>
+        </ng-container>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer" *ngIf="!collapsed">
+    <span class="version">v1.0.0</span>
+  </div>
+</aside>
