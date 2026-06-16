@@ -1,0 +1,165 @@
+<div class="profile-page" *ngIf="!loading; else loadingTpl">
+
+  <div class="page-header">
+    <div>
+      <h2>Mon profil</h2>
+      <p>Gérez vos informations personnelles et votre sécurité</p>
+    </div>
+  </div>
+
+  <div class="profile-layout">
+    <!-- Left: Identity card -->
+    <div class="identity-card card-tf">
+      <div class="avatar-section">
+        <div class="avatar-wrapper" (click)="fileInput.click()" title="Changer la photo">
+          <ng-container *ngIf="previewUrl; else initialsBlock">
+            <img [src]="previewUrl" alt="avatar" class="profile-avatar">
+          </ng-container>
+          <ng-template #initialsBlock>
+            <div class="avatar-initials-xl">{{ getInitials() }}</div>
+          </ng-template>
+          <div class="avatar-edit-overlay">
+            <mat-icon>photo_camera</mat-icon>
+          </div>
+        </div>
+        <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelect($event)">
+      </div>
+
+      <div class="identity-info" *ngIf="user">
+        <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+        <p class="identity-email">{{ user.email }}</p>
+        <span class="badge-role" [class]="user.role === 'ADMIN' ? 'admin' : user.role === 'PROJECT_MANAGER' ? 'pm' : 'member'">
+          {{ getRoleLabel(user.role) }}
+        </span>
+        <div class="status-badge mt-2" [class.active]="user.enabled" [class.inactive]="!user.enabled">
+          {{ user.enabled ? 'Compte actif' : 'Compte désactivé' }}
+        </div>
+        <div class="identity-meta mt-3">
+          <small><mat-icon class="meta-icon">calendar_today</mat-icon> Membre depuis {{ user.createdAt | date:'MMMM yyyy':'':'fr' }}</small>
+          <small *ngIf="user.phone"><mat-icon class="meta-icon">phone</mat-icon> {{ user.phone }}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Tabs -->
+    <div class="tabs-panel card-tf">
+      <mat-tab-group [(selectedIndex)]="activeTab" animationDuration="200ms">
+
+        <!-- Tab 1: Edit profile -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">edit</mat-icon>
+            Modifier le profil
+          </ng-template>
+
+          <div class="tab-content">
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Prénom</mat-label>
+                    <input matInput formControlName="firstName">
+                    <mat-error *ngIf="firstName.hasError('required')">Obligatoire</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Nom</mat-label>
+                    <input matInput formControlName="lastName">
+                    <mat-error *ngIf="lastName.hasError('required')">Obligatoire</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email (non modifiable)</mat-label>
+                <mat-icon matPrefix>email</mat-icon>
+                <input matInput [value]="user?.email ?? ''" disabled>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Téléphone</mat-label>
+                <mat-icon matPrefix>phone</mat-icon>
+                <input matInput formControlName="phone" type="tel">
+              </mat-form-field>
+
+              <div class="tab-actions">
+                <button mat-flat-button color="primary" type="submit" [disabled]="savingProfile">
+                  <mat-spinner diameter="18" *ngIf="savingProfile"></mat-spinner>
+                  <mat-icon *ngIf="!savingProfile">save</mat-icon>
+                  {{ savingProfile ? 'Sauvegarde...' : 'Enregistrer les modifications' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+
+        <!-- Tab 2: Security -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">lock</mat-icon>
+            Sécurité
+          </ng-template>
+
+          <div class="tab-content">
+            <h4 class="section-subtitle">Changer le mot de passe</h4>
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Mot de passe actuel</mat-label>
+                <mat-icon matPrefix>lock_outline</mat-icon>
+                <input matInput formControlName="currentPassword"
+                       [type]="hideCurrentPw ? 'password' : 'text'">
+                <button mat-icon-button matSuffix type="button"
+                        (click)="hideCurrentPw = !hideCurrentPw">
+                  <mat-icon>{{ hideCurrentPw ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error>Obligatoire</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Nouveau mot de passe</mat-label>
+                <mat-icon matPrefix>lock</mat-icon>
+                <input matInput formControlName="newPassword"
+                       [type]="hideNewPw ? 'password' : 'text'">
+                <button mat-icon-button matSuffix type="button"
+                        (click)="hideNewPw = !hideNewPw">
+                  <mat-icon>{{ hideNewPw ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error>Minimum 8 caractères</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Confirmer le nouveau mot de passe</mat-label>
+                <mat-icon matPrefix>lock</mat-icon>
+                <input matInput formControlName="confirmPassword"
+                       [type]="hideConfirmPw ? 'password' : 'text'">
+                <button mat-icon-button matSuffix type="button"
+                        (click)="hideConfirmPw = !hideConfirmPw">
+                  <mat-icon>{{ hideConfirmPw ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error>Obligatoire</mat-error>
+              </mat-form-field>
+
+              <div class="tab-actions">
+                <button mat-flat-button color="accent" type="submit" [disabled]="savingPassword">
+                  <mat-spinner diameter="18" *ngIf="savingPassword"></mat-spinner>
+                  <mat-icon *ngIf="!savingPassword">security</mat-icon>
+                  {{ savingPassword ? 'Modification...' : 'Changer le mot de passe' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="profile-loading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Chargement du profil...</p>
+  </div>
+</ng-template>

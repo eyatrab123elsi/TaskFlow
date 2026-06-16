@@ -1,0 +1,14 @@
+<ng-container *ngIf="isLoggedIn$ | async as user; else authOutlet">
+  <!-- Authenticated layout -->
+  <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+  <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+  <main class="main-content" [class.sidebar-collapsed]="sidebarCollapsed">
+    <router-outlet></router-outlet>
+  </main>
+</ng-container>
+
+<!-- Auth layout (login / register) -->
+<ng-template #authOutlet>
+  <router-outlet></router-outlet>
+</ng-template>

@@ -1,0 +1,61 @@
+.users-page { max-width: 1400px; }
+
+.filters-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1.5rem;
+
+  .search-field { flex: 1; min-width: 220px; }
+  .filter-field { width: 180px; }
+
+  .clear-btn {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    height: 56px;
+    border-radius: 8px;
+  }
+}
+
+.table-wrapper {
+  padding: 0;
+  overflow: hidden;
+
+  table { width: 100%; }
+
+  th.mat-mdc-header-cell {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  td.mat-mdc-cell {
+    font-size: .875rem;
+    vertical-align: middle;
+    padding: .75rem 1rem;
+  }
+
+  th.mat-mdc-header-cell { padding: .75rem 1rem; }
+}
+
+.user-name-cell strong { font-weight: 600; }
+
+.no-data-row td.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+
+  mat-icon { font-size: 2.5rem; width: auto; height: auto; opacity: .4; }
+  p { margin-top: .5rem; font-size: .9rem; }
+}
+
+::ng-deep .delete-action {
+  color: #dc2626 !important;
+  mat-icon { color: #dc2626 !important; }
+}

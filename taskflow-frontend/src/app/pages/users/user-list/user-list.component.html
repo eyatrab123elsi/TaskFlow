@@ -1,0 +1,169 @@
+<div class="users-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h2>Gestion des utilisateurs</h2>
+      <p>{{ totalElements }} utilisateur{{ totalElements > 1 ? 's' : '' }} au total</p>
+    </div>
+    <button mat-flat-button color="primary" routerLink="/users/new">
+      <mat-icon>person_add</mat-icon>
+      Nouvel utilisateur
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar card-tf">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [ngModel]="filters.search"
+             (ngModelChange)="onSearch($event)"
+             placeholder="Nom, email...">
+      <button mat-icon-button matSuffix *ngIf="filters.search"
+              (click)="onSearch(''); filters.search=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Rôle</mat-label>
+      <mat-select [(ngModel)]="filters.role" (ngModelChange)="onFilterChange()">
+        <mat-option [value]="null">Tous les rôles</mat-option>
+        <mat-option value="ADMIN">Administrateur</mat-option>
+        <mat-option value="PROJECT_MANAGER">Chef de projet</mat-option>
+        <mat-option value="MEMBER">Membre</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Statut</mat-label>
+      <mat-select [(ngModel)]="filters.enabled" (ngModelChange)="onFilterChange()">
+        <mat-option [value]="null">Tous</mat-option>
+        <mat-option [value]="true">Actifs</mat-option>
+        <mat-option [value]="false">Désactivés</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-stroked-button (click)="clearFilters()" class="clear-btn">
+      <mat-icon>filter_alt_off</mat-icon>
+      Réinitialiser
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper card-tf">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <table mat-table [dataSource]="users" matSort class="w-100">
+
+      <!-- Avatar -->
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let user">
+          <ng-container *ngIf="getAvatarUrl(user) as url; else initials">
+            <img [src]="url" class="avatar-circle" [alt]="user.firstName">
+          </ng-container>
+          <ng-template #initials>
+            <div class="avatar-initials">{{ getInitials(user) }}</div>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Full Name -->
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName">Nom complet</th>
+        <td mat-cell *matCellDef="let user">
+          <div class="user-name-cell">
+            <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="email">Email</th>
+        <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      </ng-container>
+
+      <!-- Phone -->
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef>Téléphone</th>
+        <td mat-cell *matCellDef="let user">{{ user.phone ?? '—' }}</td>
+      </ng-container>
+
+      <!-- Role -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="role">Rôle</th>
+        <td mat-cell *matCellDef="let user">
+          <span class="badge-role" [class]="getRoleBadgeClass(user.role)">
+            {{ getRoleLabel(user.role) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Statut</th>
+        <td mat-cell *matCellDef="let user">
+          <span class="status-badge" [class.active]="user.enabled" [class.inactive]="!user.enabled">
+            {{ user.enabled ? 'Actif' : 'Désactivé' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Created At -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">Créé le</th>
+        <td mat-cell *matCellDef="let user">{{ user.createdAt | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="text-end">Actions</th>
+        <td mat-cell *matCellDef="let user" class="text-end">
+          <button mat-icon-button [matMenuTriggerFor]="actionMenu"
+                  matTooltip="Actions" [matMenuTriggerData]="{ user: user }">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="no-data-row" *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length" class="no-data">
+          <mat-icon>search_off</mat-icon>
+          <p>Aucun utilisateur trouvé</p>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Paginator -->
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="filters.size"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      showFirstLastButtons
+      (page)="onPage($event)">
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- Action menu -->
+<mat-menu #actionMenu="matMenu">
+  <ng-template matMenuContent let-user="user">
+    <button mat-menu-item (click)="edit(user.id)">
+      <mat-icon>edit</mat-icon> Modifier
+    </button>
+    <button mat-menu-item (click)="toggleStatus(user)">
+      <mat-icon>{{ user.enabled ? 'block' : 'check_circle' }}</mat-icon>
+      {{ user.enabled ? 'Désactiver' : 'Activer' }}
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item class="delete-action" (click)="delete(user)">
+      <mat-icon>delete_outline</mat-icon> Supprimer
+    </button>
+  </ng-template>
+</mat-menu>

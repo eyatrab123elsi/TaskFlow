@@ -1,0 +1,12 @@
+.main-content {
+  margin-top: var(--navbar-h);
+  margin-left: var(--sidebar-w);
+  padding: 2rem;
+  min-height: calc(100vh - var(--navbar-h));
+  transition: margin-left .25s ease;
+  background: var(--surface);
+
+  &.sidebar-collapsed {
+    margin-left: 68px;
+  }
+}
