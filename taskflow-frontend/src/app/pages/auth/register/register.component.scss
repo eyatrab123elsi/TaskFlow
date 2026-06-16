@@ -201,8 +201,8 @@
 
 .field-wrapper {
   display:flex; align-items:center;
-  background:rgba(255,255,255,.06);
-  border:1.5px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.09);
+  border:1.5px solid rgba(255,255,255,.15);
   border-radius:12px;
   transition:all .25s; overflow:hidden;
 
@@ -218,12 +218,13 @@
 
   .field-input {
     flex:1; background:transparent; border:none; outline:none;
-    color:#fff; font-size:.9rem; padding:.8rem 0;
+    color:#f1f5f9; font-size:.9rem; padding:.8rem 0;
     font-family:'Inter',sans-serif;
-    &::placeholder { color:rgba(255,255,255,.25); }
+    caret-color:#c4b5fd;
+    &::placeholder { color:rgba(200,210,255,.35); }
     &:-webkit-autofill {
-      -webkit-box-shadow:0 0 0 100px rgba(139,92,246,.1) inset;
-      -webkit-text-fill-color:#fff;
+      -webkit-box-shadow:0 0 0 100px rgba(15,12,41,1) inset;
+      -webkit-text-fill-color:#f1f5f9;
     }
   }
 
