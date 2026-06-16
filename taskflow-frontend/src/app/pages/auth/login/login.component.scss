@@ -278,8 +278,8 @@
 .field-wrapper {
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,.06);
-  border: 1.5px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.09);
+  border: 1.5px solid rgba(255,255,255,.15);
   border-radius: 12px;
   transition: all .25s;
   overflow: hidden;
@@ -312,16 +312,17 @@
     background: transparent;
     border: none;
     outline: none;
-    color: #fff;
+    color: #f1f5f9;
     font-size: .95rem;
     padding: .9rem 0;
     font-family: 'Inter', sans-serif;
+    caret-color: #a5b4fc;
 
-    &::placeholder { color: rgba(255,255,255,.25); }
+    &::placeholder { color: rgba(200,210,255,.35); }
 
     &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 100px rgba(99,102,241,.1) inset;
-      -webkit-text-fill-color: #fff;
+      -webkit-box-shadow: 0 0 0 100px rgba(15,12,41,1) inset;
+      -webkit-text-fill-color: #f1f5f9;
     }
   }
 
