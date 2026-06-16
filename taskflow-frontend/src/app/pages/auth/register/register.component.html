@@ -1,76 +1,201 @@
-<div class="auth-layout">
-  <div class="auth-left">
-    <div class="auth-brand">
-      <div class="brand-icon"><i class="bi bi-lightning-charge-fill"></i></div>
-      <h1>TaskFlow</h1>
-      <p>Rejoignez votre équipe et démarrez vos projets.</p>
-    </div>
-    <div class="auth-illustration"><i class="bi bi-person-plus-fill"></i></div>
+<div class="auth-wrapper">
+
+  <!-- Animated background shapes -->
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
   </div>
 
-  <div class="auth-right">
-    <div class="auth-card">
-      <div class="auth-header">
-        <h2>Créer un compte</h2>
-        <p>Remplissez le formulaire pour commencer</p>
+  <!-- Left panel -->
+  <div class="auth-left">
+    <div class="left-content">
+      <div class="brand-logo">
+        <div class="logo-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+        <span class="logo-text">TaskFlow</span>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
-        <div class="row g-3">
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Prénom</mat-label>
-              <input matInput formControlName="firstName">
-              <mat-error *ngIf="firstName.hasError('required')">Obligatoire</mat-error>
-            </mat-form-field>
+      <div class="left-hero">
+        <h1 class="hero-title">
+          Rejoignez<br>
+          <span class="gradient-text">notre communauté</span>
+        </h1>
+        <p class="hero-desc">
+          Créez votre compte en quelques secondes et commencez à collaborer avec votre équipe dès aujourd'hui.
+        </p>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Créez votre compte</strong>
+            <p>Remplissez le formulaire en 30 secondes</p>
           </div>
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Nom</mat-label>
-              <input matInput formControlName="lastName">
-              <mat-error *ngIf="lastName.hasError('required')">Obligatoire</mat-error>
-            </mat-form-field>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Rejoignez votre équipe</strong>
+            <p>Un admin vous attribue votre rôle</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>
+            <strong>Commencez à travailler</strong>
+            <p>Accédez au dashboard et aux projets</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="left-badges">
+        <div class="tech-badge">🔒 Sécurisé</div>
+        <div class="tech-badge">⚡ Rapide</div>
+        <div class="tech-badge">🌐 Collaboratif</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="auth-right">
+    <div class="auth-card">
+
+      <div class="card-header">
+        <div class="welcome-icon">
+          <i class="bi bi-person-plus"></i>
+        </div>
+        <h2>Créer un compte</h2>
+        <p>Rejoignez TaskFlow gratuitement</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" autocomplete="off">
+
+        <!-- Prénom + Nom -->
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Prénom</label>
+            <div class="field-wrapper" [class.error]="firstName.invalid && firstName.touched"
+                 [class.success]="firstName.valid && firstName.touched">
+              <span class="field-icon"><i class="bi bi-person"></i></span>
+              <input class="field-input" type="text"
+                     formControlName="firstName" placeholder="Prénom">
+            </div>
+            <div class="field-error" *ngIf="firstName.invalid && firstName.touched">
+              <i class="bi bi-exclamation-circle"></i> Obligatoire
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Nom</label>
+            <div class="field-wrapper" [class.error]="lastName.invalid && lastName.touched"
+                 [class.success]="lastName.valid && lastName.touched">
+              <span class="field-icon"><i class="bi bi-person"></i></span>
+              <input class="field-input" type="text"
+                     formControlName="lastName" placeholder="Nom">
+            </div>
+            <div class="field-error" *ngIf="lastName.invalid && lastName.touched">
+              <i class="bi bi-exclamation-circle"></i> Obligatoire
+            </div>
           </div>
         </div>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Email</mat-label>
-          <mat-icon matPrefix>email</mat-icon>
-          <input matInput formControlName="email" type="email">
-          <mat-error *ngIf="email.hasError('required')">Email obligatoire</mat-error>
-          <mat-error *ngIf="email.hasError('email')">Format invalide</mat-error>
-        </mat-form-field>
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label">Adresse email</label>
+          <div class="field-wrapper" [class.error]="email.invalid && email.touched"
+               [class.success]="email.valid && email.touched">
+            <span class="field-icon"><i class="bi bi-envelope"></i></span>
+            <input class="field-input" type="email"
+                   formControlName="email" placeholder="nom@exemple.com">
+            <span class="field-status" *ngIf="email.touched">
+              <i class="bi" [class.bi-check-circle-fill]="email.valid"
+                            [class.bi-x-circle-fill]="email.invalid"></i>
+            </span>
+          </div>
+          <div class="field-error" *ngIf="email.invalid && email.touched">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ email.hasError('required') ? 'Email obligatoire' : 'Format invalide' }}
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Téléphone (optionnel)</mat-label>
-          <mat-icon matPrefix>phone</mat-icon>
-          <input matInput formControlName="phone" type="tel">
-        </mat-form-field>
+        <!-- Téléphone -->
+        <div class="field-group">
+          <label class="field-label">Téléphone <span class="optional">(optionnel)</span></label>
+          <div class="field-wrapper">
+            <span class="field-icon"><i class="bi bi-telephone"></i></span>
+            <input class="field-input" type="tel"
+                   formControlName="phone" placeholder="+216 XX XXX XXX">
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Mot de passe</mat-label>
-          <mat-icon matPrefix>lock_outline</mat-icon>
-          <input matInput formControlName="password"
-                 [type]="hidePassword ? 'password' : 'text'">
-          <button mat-icon-button matSuffix type="button"
-                  (click)="hidePassword = !hidePassword">
-            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-          <mat-error *ngIf="password.hasError('required')">Obligatoire</mat-error>
-          <mat-error *ngIf="password.hasError('minlength')">Minimum 8 caractères</mat-error>
-        </mat-form-field>
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label">Mot de passe</label>
+          <div class="field-wrapper" [class.error]="password.invalid && password.touched"
+               [class.success]="password.valid && password.touched">
+            <span class="field-icon"><i class="bi bi-lock"></i></span>
+            <input class="field-input"
+                   [type]="hidePassword ? 'password' : 'text'"
+                   formControlName="password" placeholder="Minimum 8 caractères">
+            <button type="button" class="toggle-pw" (click)="hidePassword = !hidePassword">
+              <i class="bi" [class.bi-eye]="hidePassword" [class.bi-eye-slash]="!hidePassword"></i>
+            </button>
+          </div>
+          <div class="field-error" *ngIf="password.invalid && password.touched">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ password.hasError('required') ? 'Obligatoire' : 'Minimum 8 caractères' }}
+          </div>
+          <!-- Password strength -->
+          <div class="pw-strength" *ngIf="password.value">
+            <div class="strength-bars">
+              <div class="bar" [class.active]="password.value.length >= 4"
+                   [class.weak]="password.value.length < 8"
+                   [class.strong]="password.value.length >= 8"></div>
+              <div class="bar" [class.active]="password.value.length >= 8"
+                   [class.strong]="password.value.length >= 8"></div>
+              <div class="bar" [class.active]="password.value.length >= 10 && hasSpecialChar(password.value)"
+                   [class.very-strong]="password.value.length >= 10 && hasSpecialChar(password.value)"></div>
+            </div>
+            <span class="strength-label">
+              {{ getPasswordStrength(password.value) }}
+            </span>
+          </div>
+        </div>
 
-        <button mat-flat-button color="primary" type="submit"
-                class="submit-btn w-100" [disabled]="loading">
-          <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
-          <span *ngIf="!loading">Créer mon compte</span>
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" [class.loading]="loading" [disabled]="loading">
+          <span class="btn-content" *ngIf="!loading">
+            <i class="bi bi-person-check"></i>
+            Créer mon compte
+          </span>
+          <span class="btn-content" *ngIf="loading">
+            <div class="spinner"></div>
+            Création en cours...
+          </span>
         </button>
+
+        <p class="terms">
+          En créant un compte, vous acceptez nos
+          <a href="#">Conditions d'utilisation</a> et notre
+          <a href="#">Politique de confidentialité</a>
+        </p>
+
       </form>
 
-      <div class="auth-footer">
-        <span>Déjà un compte ?</span>
-        <a routerLink="/auth/login">Se connecter</a>
+      <div class="divider"><span>ou</span></div>
+
+      <div class="card-footer">
+        <p>Déjà un compte ?</p>
+        <a routerLink="/auth/login" class="link-register">
+          <i class="bi bi-arrow-left"></i>
+          Retour à la connexion
+        </a>
       </div>
+
     </div>
   </div>
+
 </div>
