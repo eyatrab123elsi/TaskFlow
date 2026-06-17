@@ -35,18 +35,21 @@
     text-decoration: none;
     font-size: .875rem;
     font-weight: 500;
-    transition: background .15s, color .15s;
+    transition: background .2s, color .2s, transform .15s;
+    position: relative;
 
     &:hover {
-      background: rgba(255,255,255,.06);
-      color: #fff;
+      background: rgba(255,255,255,.07);
+      color: #e2e8f0;
+      transform: translateX(2px);
     }
 
     &.active {
-      background: rgba(57, 73, 171, .35);
+      background: linear-gradient(90deg, rgba(99,102,241,.25), rgba(57,73,171,.15));
       color: #fff;
+      box-shadow: inset 3px 0 0 #818cf8;
 
-      .nav-icon { color: #818cf8; }
+      .nav-icon { color: #a5b4fc; }
     }
 
     .nav-icon { font-size: 1.2rem; width: 20px; height: 20px; flex-shrink: 0; }

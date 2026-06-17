@@ -119,10 +119,16 @@
         <!-- Téléphone -->
         <div class="field-group">
           <label class="field-label">Téléphone <span class="optional">(optionnel)</span></label>
-          <div class="field-wrapper">
+          <div class="field-wrapper" [class.error]="phone.invalid && phone.touched">
             <span class="field-icon"><i class="bi bi-telephone"></i></span>
             <input class="field-input" type="tel"
-                   formControlName="phone" placeholder="+216 XX XXX XXX">
+                   formControlName="phone"
+                   inputmode="numeric"
+                   placeholder="Ex : 22123456"
+                   (keydown)="allowNumbersOnly($event)">
+          </div>
+          <div class="field-error" *ngIf="phone.invalid && phone.touched">
+            <i class="bi bi-exclamation-circle"></i> Chiffres uniquement (6 à 15 chiffres)
           </div>
         </div>
 
