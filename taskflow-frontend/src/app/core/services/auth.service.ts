@@ -65,8 +65,8 @@ export class AuthService {
     return roles.includes(this.currentUser?.role ?? '');
   }
 
-  forgotPassword(email: string): Observable<void> {
-    return this.http.post<void>(`${environment.apiUrl}/auth/forgot-password`, { email });
+  forgotPassword(email: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/auth/forgot-password`, { email });
   }
 
   resetPassword(token: string, newPassword: string, confirmPassword: string): Observable<void> {
