@@ -34,9 +34,9 @@ export class ProfileComponent implements OnInit {
     private notify: NotificationService
   ) {
     this.profileForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName:  ['', [Validators.required, Validators.minLength(2)]],
-      phone:     ['']
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s\-']+$/)]],
+      lastName:  ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s\-']+$/)]],
+      phone:     ['', [Validators.pattern(/^[0-9]{6,15}$/)]]
     });
 
     this.passwordForm = this.fb.group({
@@ -128,6 +128,22 @@ export class ProfileComponent implements OnInit {
     return { ADMIN: 'Administrateur', PROJECT_MANAGER: 'Chef de projet', MEMBER: 'Membre' }[role] ?? role;
   }
 
+  allowLettersOnly(event: KeyboardEvent): void {
+    const allowed = /^[a-zA-ZÀ-ÿ\s\-']$/;
+    const control = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+    if (!allowed.test(event.key) && !control.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  allowNumbersOnly(event: KeyboardEvent): void {
+    const control = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+    if (!/^\d$/.test(event.key) && !control.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
   get firstName() { return this.profileForm.get('firstName')!; }
   get lastName()  { return this.profileForm.get('lastName')!; }
+  get phone()     { return this.profileForm.get('phone')!; }
 }
