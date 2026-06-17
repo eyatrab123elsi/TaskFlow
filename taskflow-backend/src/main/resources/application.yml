@@ -11,6 +11,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: votre-email@gmail.com      # 👈 remplacer par votre Gmail
+    password: votre-app-password          # 👈 App Password Gmail (pas le vrai mdp)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   servlet:
     multipart:
       max-file-size: 10MB
