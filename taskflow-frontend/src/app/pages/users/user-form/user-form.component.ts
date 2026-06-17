@@ -31,11 +31,11 @@ export class UserFormComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName:  ['', [Validators.required, Validators.minLength(2)]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s\-']+$/)]],
+      lastName:  ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s\-']+$/)]],
       email:     ['', [Validators.required, Validators.email]],
       password:  ['', [Validators.required, Validators.minLength(8)]],
-      phone:     [''],
+      phone:     ['', [Validators.pattern(/^[0-9]{6,15}$/)]],
       role:      ['MEMBER', Validators.required],
       enabled:   [true]
     });
@@ -124,9 +124,24 @@ export class UserFormComponent implements OnInit {
     return `${f.charAt(0)}${l.charAt(0)}`.toUpperCase();
   }
 
+  allowLettersOnly(event: KeyboardEvent): void {
+    const control = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+    if (!/^[a-zA-ZÀ-ÿ\s\-']$/.test(event.key) && !control.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  allowNumbersOnly(event: KeyboardEvent): void {
+    const control = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+    if (!/^\d$/.test(event.key) && !control.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
   get firstName() { return this.form.get('firstName')!; }
   get lastName()  { return this.form.get('lastName')!; }
   get email()     { return this.form.get('email')!; }
   get password()  { return this.form.get('password')!; }
+  get phone()     { return this.form.get('phone')!; }
   get role()      { return this.form.get('role')!; }
 }

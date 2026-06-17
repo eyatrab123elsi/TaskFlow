@@ -39,16 +39,23 @@
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Prénom *</mat-label>
-              <input matInput formControlName="firstName">
+              <input matInput formControlName="firstName"
+                     (keydown)="allowLettersOnly($event)"
+                     autocomplete="given-name">
               <mat-error *ngIf="firstName.hasError('required')">Obligatoire</mat-error>
               <mat-error *ngIf="firstName.hasError('minlength')">Minimum 2 caractères</mat-error>
+              <mat-error *ngIf="firstName.hasError('pattern')">Lettres uniquement</mat-error>
             </mat-form-field>
           </div>
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Nom *</mat-label>
-              <input matInput formControlName="lastName">
+              <input matInput formControlName="lastName"
+                     (keydown)="allowLettersOnly($event)"
+                     autocomplete="family-name">
               <mat-error *ngIf="lastName.hasError('required')">Obligatoire</mat-error>
+              <mat-error *ngIf="lastName.hasError('minlength')">Minimum 2 caractères</mat-error>
+              <mat-error *ngIf="lastName.hasError('pattern')">Lettres uniquement</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -64,7 +71,11 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Téléphone</mat-label>
           <mat-icon matPrefix>phone</mat-icon>
-          <input matInput formControlName="phone" type="tel">
+          <input matInput formControlName="phone" type="tel"
+                 inputmode="numeric"
+                 placeholder="Ex : 22123456"
+                 (keydown)="allowNumbersOnly($event)">
+          <mat-error *ngIf="phone.hasError('pattern')">Chiffres uniquement (6 à 15 chiffres)</mat-error>
         </mat-form-field>
 
         <mat-divider class="my-3"></mat-divider>
