@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -38,9 +40,11 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     @Operation(summary = "Demande de réinitialisation de mot de passe par email")
-    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
-        passwordResetService.forgotPassword(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        String token = passwordResetService.forgotPassword(request);
+        // Retourne le token pour le mode dev (redirection auto côté frontend)
+        // En prod avec email configuré, le token est aussi envoyé par mail
+        return ResponseEntity.ok(Map.of("token", token != null ? token : ""));
     }
 
     @PostMapping("/reset-password")

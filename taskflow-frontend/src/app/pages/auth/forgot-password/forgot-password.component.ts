@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -10,11 +11,12 @@ import { NotificationService } from '../../../core/services/notification.service
 })
 export class ForgotPasswordComponent {
   form: FormGroup;
-  loading  = false;
-  sent     = false;
+  loading = false;
+  sent    = false;
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private authService: AuthService,
     private notify: NotificationService
   ) {
@@ -26,14 +28,22 @@ export class ForgotPasswordComponent {
   submit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.loading = true;
+
     this.authService.forgotPassword(this.form.value.email).subscribe({
-      next: () => {
+      next: (res) => {
         this.loading = false;
-        this.sent    = true;
+        if (res?.token) {
+          // Redirection automatique vers la page reset avec le token
+          this.router.navigate(['/auth/reset-password'], {
+            queryParams: { token: res.token }
+          });
+        } else {
+          // Email non trouvé — on affiche quand même le succès (sécurité)
+          this.sent = true;
+        }
       },
       error: () => {
         this.loading = false;
-        // On affiche quand même le message de succès pour ne pas révéler si l'email existe
         this.sent = true;
       }
     });

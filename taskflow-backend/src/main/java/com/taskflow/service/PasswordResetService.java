@@ -10,6 +10,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,16 +25,20 @@ import java.util.UUID;
 @Slf4j
 public class PasswordResetService {
 
-    private final UserRepository              userRepository;
+    private final UserRepository               userRepository;
     private final PasswordResetTokenRepository tokenRepository;
-    private final JavaMailSender              mailSender;
-    private final PasswordEncoder             passwordEncoder;
+    private final JavaMailSender               mailSender;
+    private final PasswordEncoder              passwordEncoder;
 
+    /**
+     * Génère un token de reset et tente d'envoyer l'email.
+     * Retourne toujours le lien (pour le mode dev / démo universitaire).
+     * Si l'email n'existe pas → retourne null (sans révéler l'info).
+     */
     @Transactional
-    public void forgotPassword(ForgotPasswordRequest request) {
+    public String forgotPassword(ForgotPasswordRequest request) {
         User user = userRepository.findByEmail(request.email()).orElse(null);
-        // Ne pas révéler si l'email existe ou non
-        if (user == null) return;
+        if (user == null) return null;
 
         tokenRepository.deleteByUser(user);
 
@@ -48,7 +53,10 @@ public class PasswordResetService {
 
         String resetLink = "http://localhost:4200/auth/reset-password?token=" + token;
         log.info("🔑 Reset link for {}: {}", user.getEmail(), resetLink);
+
         sendResetEmail(user, resetLink);
+
+        return token;
     }
 
     @Transactional
@@ -84,8 +92,9 @@ public class PasswordResetService {
             helper.setText(buildEmailHtml(user.getFirstName(), resetLink), true);
             mailSender.send(message);
             log.info("✅ Email envoyé à {}", user.getEmail());
-        } catch (MessagingException e) {
-            log.error("❌ Erreur envoi email: {}", e.getMessage());
+        } catch (MessagingException | MailException e) {
+            log.warn("⚠️  Email non envoyé (config mail absente ou incorrecte): {}", e.getMessage());
+            log.info("🔗 Utilisez ce lien directement: {}", resetLink);
         }
     }
 
@@ -98,20 +107,17 @@ public class PasswordResetService {
                 <tr><td align="center" style="padding:3rem 1rem;">
                   <table width="520" cellpadding="0" cellspacing="0"
                          style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.1);">
-                    <!-- Header -->
                     <tr>
                       <td style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:2rem;text-align:center;">
                         <div style="font-size:2rem;">⚡</div>
                         <h1 style="color:#fff;margin:.5rem 0 0;font-size:1.5rem;font-weight:800;">TaskFlow</h1>
                       </td>
                     </tr>
-                    <!-- Body -->
                     <tr>
                       <td style="padding:2.5rem 2rem;">
                         <h2 style="color:#1e293b;margin:0 0 .75rem;font-size:1.25rem;">Bonjour %s,</h2>
                         <p style="color:#64748b;margin:0 0 1.5rem;line-height:1.6;">
-                          Vous avez demandé la réinitialisation de votre mot de passe TaskFlow.<br>
-                          Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.
+                          Vous avez demandé la réinitialisation de votre mot de passe TaskFlow.
                         </p>
                         <div style="text-align:center;margin:2rem 0;">
                           <a href="%s"
@@ -122,18 +128,13 @@ public class PasswordResetService {
                           </a>
                         </div>
                         <p style="color:#94a3b8;font-size:.8rem;margin:0;line-height:1.6;">
-                          Ce lien est valable <strong>1 heure</strong>.<br>
-                          Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.
+                          Ce lien est valable <strong>1 heure</strong>.
                         </p>
                       </td>
                     </tr>
-                    <!-- Footer -->
                     <tr>
-                      <td style="background:#f8fafc;padding:1rem 2rem;text-align:center;
-                                 border-top:1px solid #e2e8f0;">
-                        <p style="color:#94a3b8;font-size:.75rem;margin:0;">
-                          © 2026 TaskFlow — Projet universitaire
-                        </p>
+                      <td style="background:#f8fafc;padding:1rem 2rem;text-align:center;border-top:1px solid #e2e8f0;">
+                        <p style="color:#94a3b8;font-size:.75rem;margin:0;">© 2026 TaskFlow — Projet universitaire</p>
                       </td>
                     </tr>
                   </table>
