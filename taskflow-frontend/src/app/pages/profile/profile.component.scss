@@ -197,18 +197,17 @@
     }
   }
 
-  // ---- Fix décalage label / icône préfixe ----
-  // Angular Material 16 MDC : le label flottant doit démarrer après le préfixe
-  .mat-form-field-has-icon-prefix .mdc-floating-label,
-  .mat-mdc-form-field:has(.mat-mdc-form-field-icon-prefix) .mdc-floating-label {
+  // ---- Fix décalage label / icône préfixe (CORRIGÉ) ----
+  // État FLOTTANT (label remonté au-dessus de l'outline) : démarre à gauche, sans décalage
+  .mat-mdc-form-field:has(.mat-mdc-form-field-icon-prefix) .mdc-floating-label--float-above {
     padding-left: 0 !important;
     left: 0 !important;
   }
 
-  // Quand le label est en position repos (pas flottant) et qu'il y a un préfixe,
-  // on le décale pour qu'il parte APRÈS l'icône (~40px)
-  .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mdc-floating-label:not(.mdc-floating-label--float-above) {
-    transform: translateY(-50%) !important;
+  // État AU REPOS (label dans le champ, sert de placeholder) : doit démarrer APRÈS l'icône
+  // (40px = 12px marge gauche + 20px icône + 8px marge droite de l'icône)
+  .mat-mdc-form-field:has(.mat-mdc-form-field-icon-prefix) .mdc-floating-label:not(.mdc-floating-label--float-above) {
+    transform: translateY(-50%) translateX(28px) !important;
   }
 
   // Icône suffixe (visibility toggle)
