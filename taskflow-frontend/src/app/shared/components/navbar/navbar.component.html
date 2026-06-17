@@ -13,10 +13,6 @@
 
   <div class="navbar-right">
     <ng-container *ngIf="currentUser$ | async as user">
-      <button mat-icon-button class="notif-btn" matTooltip="Notifications">
-        <mat-icon>notifications_none</mat-icon>
-      </button>
-
       <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
         <ng-container *ngIf="getAvatarUrl(user) as avatarUrl; else initials">
           <img [src]="avatarUrl" alt="avatar" class="avatar-circle me-2">

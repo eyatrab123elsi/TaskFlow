@@ -158,7 +158,7 @@
 // ===== SECURITY FORM — input custom styling =====
 ::ng-deep .security-form {
 
-  // Coins arrondis + bordure plus visible
+  // Coins arrondis + bordure
   .mat-mdc-form-field .mdc-notched-outline__leading  { border-radius: 12px 0 0 12px !important; }
   .mat-mdc-form-field .mdc-notched-outline__trailing { border-radius: 0 12px 12px 0 !important; }
   .mat-mdc-form-field .mdc-notched-outline__leading,
@@ -179,44 +179,74 @@
     filter: drop-shadow(0 0 6px rgba(99,102,241,.18));
   }
 
-  // Icône préfixe colorée
-  .mat-mdc-form-field .mat-mdc-form-field-icon-prefix .mat-icon {
-    color: var(--primary);
-    font-size: 1.1rem;
-    opacity: .85;
-    padding: 0 6px 0 4px;
+  // ---- Icône préfixe : taille et espacement propres ----
+  .mat-mdc-form-field-icon-prefix {
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+
+    .mat-icon {
+      color: var(--primary);
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      opacity: .85;
+      margin: 0 8px 0 12px !important;
+      padding: 0 !important;
+      flex-shrink: 0;
+    }
+  }
+
+  // ---- Fix décalage label / icône préfixe (CORRIGÉ) ----
+  // État FLOTTANT (label remonté au-dessus de l'outline) : démarre à gauche, sans décalage
+  .mat-mdc-form-field:has(.mat-mdc-form-field-icon-prefix) .mdc-floating-label--float-above {
+    padding-left: 0 !important;
+    left: 0 !important;
+  }
+
+  // État AU REPOS (label dans le champ, sert de placeholder) : doit démarrer APRÈS l'icône
+  // (40px = 12px marge gauche + 20px icône + 8px marge droite de l'icône)
+  .mat-mdc-form-field:has(.mat-mdc-form-field-icon-prefix) .mdc-floating-label:not(.mdc-floating-label--float-above) {
+    transform: translateY(-50%) translateX(28px) !important;
   }
 
   // Icône suffixe (visibility toggle)
-  .mat-mdc-form-field .mat-mdc-icon-button .mat-icon {
-    color: #94a3b8;
-    font-size: 1.1rem;
-    transition: color .2s;
-  }
-  .mat-mdc-form-field .mat-mdc-icon-button:hover .mat-icon {
-    color: var(--primary);
+  .mat-mdc-form-field-icon-suffix .mat-mdc-icon-button {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    margin-right: 4px !important;
+
+    .mat-icon {
+      color: #94a3b8;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      transition: color .2s;
+    }
+    &:hover .mat-icon { color: var(--primary); }
   }
 
-  // Label + input text
-  .mat-mdc-form-field .mat-mdc-floating-label {
+  // Label typographie
+  .mat-mdc-floating-label {
     font-weight: 500;
     color: #64748b !important;
   }
   .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
     color: var(--primary) !important;
   }
+
+  // Input text
   .mat-mdc-input-element {
     font-size: .95rem !important;
     letter-spacing: .3px;
+    padding-left: 0 !important;
   }
 
-  // Hint text en dessous des champs
+  // Hint
   .mat-mdc-form-field-hint-wrapper {
     padding: 2px 4px 0;
-    .mat-mdc-form-field-hint {
-      font-size: .72rem;
-      color: #94a3b8;
-    }
+    .mat-mdc-form-field-hint { font-size: .72rem; color: #94a3b8; }
   }
 
   // Error state
@@ -229,7 +259,12 @@
     color: #f87171;
   }
 
-  // Hauteur confortable
-  .mat-mdc-text-field-wrapper { padding: 0 8px; }
-  .mat-mdc-form-field-infix { padding-top: 14px !important; padding-bottom: 14px !important; min-height: 52px; }
+  // Hauteur confortable — ne pas toucher le padding du wrapper pour ne pas casser le positionnement MDC
+  .mat-mdc-text-field-wrapper { padding: 0 !important; }
+  .mat-mdc-form-field-infix {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    min-height: 56px;
+    padding-left: 0 !important;
+  }
 }

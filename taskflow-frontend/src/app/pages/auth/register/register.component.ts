@@ -24,7 +24,7 @@ export class RegisterComponent {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName:  ['', [Validators.required, Validators.minLength(2)]],
       email:     ['', [Validators.required, Validators.email]],
-      phone:     [''],
+      phone:     ['', [Validators.pattern(/^[0-9]{6,15}$/)]],
       password:  ['', [Validators.required, Validators.minLength(8)]]
     });
   }
@@ -56,8 +56,15 @@ export class RegisterComponent {
     return 'Fort';
   }
 
+  allowNumbersOnly(event: KeyboardEvent): void {
+    if (!/^\d$/.test(event.key) && !['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
   get firstName() { return this.form.get('firstName')!; }
   get lastName()  { return this.form.get('lastName')!; }
   get email()     { return this.form.get('email')!; }
+  get phone()     { return this.form.get('phone')!; }
   get password()  { return this.form.get('password')!; }
 }

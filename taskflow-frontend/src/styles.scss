@@ -66,6 +66,36 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; line-height: 1.3; }
   box-shadow: var(--shadow-sm) !important;
 }
 
+// Form fields — style global harmonisé
+.mat-mdc-form-field.mat-form-field-appearance-outline {
+  .mdc-notched-outline__leading  { border-radius: 10px 0 0 10px !important; }
+  .mdc-notched-outline__trailing { border-radius: 0 10px 10px 0 !important; }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--border) !important;
+    transition: border-color .2s !important;
+  }
+
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing { border-color: var(--primary) !important; border-width: 2px !important; }
+  }
+}
+
+// Buttons — transitions douces
+.mat-mdc-raised-button,
+.mat-mdc-flat-button,
+.mat-mdc-outlined-button {
+  border-radius: 8px !important;
+  transition: box-shadow .2s, transform .15s, background .2s !important;
+
+  &:hover:not([disabled]) { transform: translateY(-1px); }
+  &:active:not([disabled]) { transform: translateY(0); }
+}
+
 .mat-mdc-table {
   background: var(--card-bg) !important;
   border-radius: var(--radius);
