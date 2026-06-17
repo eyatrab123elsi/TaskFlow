@@ -110,12 +110,15 @@
                   <mat-label>Mot de passe actuel</mat-label>
                   <mat-icon matPrefix>lock_outline</mat-icon>
                   <input matInput formControlName="currentPassword"
-                         [type]="hideCurrentPw ? 'password' : 'text'">
+                         [type]="hideCurrentPw ? 'password' : 'text'"
+                         placeholder="Votre mot de passe actuel">
                   <button mat-icon-button matSuffix type="button"
-                          (click)="hideCurrentPw = !hideCurrentPw">
+                          (click)="hideCurrentPw = !hideCurrentPw"
+                          [matTooltip]="hideCurrentPw ? 'Afficher' : 'Masquer'">
                     <mat-icon>{{ hideCurrentPw ? 'visibility_off' : 'visibility' }}</mat-icon>
                   </button>
-                  <mat-error>Obligatoire</mat-error>
+                  <mat-hint>Entrez votre mot de passe actuel pour confirmer votre identité</mat-hint>
+                  <mat-error>Mot de passe actuel obligatoire</mat-error>
                 </mat-form-field>
                 <a routerLink="/auth/forgot-password" class="forgot-link">
                   <mat-icon>help_outline</mat-icon> Mot de passe oublié ?
@@ -127,12 +130,15 @@
                   <mat-label>Nouveau mot de passe</mat-label>
                   <mat-icon matPrefix>lock</mat-icon>
                   <input matInput formControlName="newPassword"
-                         [type]="hideNewPw ? 'password' : 'text'">
+                         [type]="hideNewPw ? 'password' : 'text'"
+                         placeholder="Minimum 8 caractères">
                   <button mat-icon-button matSuffix type="button"
-                          (click)="hideNewPw = !hideNewPw">
+                          (click)="hideNewPw = !hideNewPw"
+                          [matTooltip]="hideNewPw ? 'Afficher' : 'Masquer'">
                     <mat-icon>{{ hideNewPw ? 'visibility_off' : 'visibility' }}</mat-icon>
                   </button>
-                  <mat-error>Minimum 8 caractères</mat-error>
+                  <mat-hint>Minimum 8 caractères — utilisez un caractère spécial pour plus de sécurité</mat-hint>
+                  <mat-error>Minimum 8 caractères requis</mat-error>
                 </mat-form-field>
               </div>
 
@@ -141,12 +147,15 @@
                   <mat-label>Confirmer le nouveau mot de passe</mat-label>
                   <mat-icon matPrefix>lock</mat-icon>
                   <input matInput formControlName="confirmPassword"
-                         [type]="hideConfirmPw ? 'password' : 'text'">
+                         [type]="hideConfirmPw ? 'password' : 'text'"
+                         placeholder="Répétez le nouveau mot de passe">
                   <button mat-icon-button matSuffix type="button"
-                          (click)="hideConfirmPw = !hideConfirmPw">
+                          (click)="hideConfirmPw = !hideConfirmPw"
+                          [matTooltip]="hideConfirmPw ? 'Afficher' : 'Masquer'">
                     <mat-icon>{{ hideConfirmPw ? 'visibility_off' : 'visibility' }}</mat-icon>
                   </button>
-                  <mat-error>Obligatoire</mat-error>
+                  <mat-hint>Les deux mots de passe doivent être identiques</mat-hint>
+                  <mat-error>Confirmation obligatoire</mat-error>
                 </mat-form-field>
               </div>
 

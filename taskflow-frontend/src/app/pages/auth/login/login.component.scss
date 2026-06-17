@@ -271,8 +271,23 @@
   color: rgba(255,255,255,.7);
   text-transform: uppercase;
   letter-spacing: .5px;
+}
+
+.label-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  margin-bottom: .0rem;
+}
+
+.forgot-link {
+  font-size: .78rem;
+  color: #c4b5fd;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color .2s;
+  white-space: nowrap;
+  &:hover { color: #ddd6fe; text-decoration: underline; }
 }
 
 .field-wrapper {
