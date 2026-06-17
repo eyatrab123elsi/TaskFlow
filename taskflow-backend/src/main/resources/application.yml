@@ -1,8 +1,10 @@
 spring:
+  config:
+    import: optional:classpath:application-local.yml
   datasource:
     url: jdbc:mysql://localhost:3306/taskflow_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password:         # XAMPP : mot de passe vide par défaut. Si tu en as un, mets-le ici
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -14,8 +16,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: votre-email@gmail.com      # 👈 remplacer par votre Gmail
-    password: votre-app-password          # 👈 App Password Gmail (pas le vrai mdp)
+    username: your-email@gmail.com
+    password: your-app-password
     properties:
       mail:
         smtp:
